@@ -58,7 +58,7 @@ export default Component.extend(Pausable, {
 
     // Ensure that we only try to handle links that fall within the site.
     if (destination.origin === here.origin && destination.pathname.indexOf(rootURL) === 0) {
-      let { routeName, params } = router.recognize(destination.pathname);
+      let { routeName, params } = router.recognize(destination);
       router.transitionTo(routeName, ...params);
       return true;
     }

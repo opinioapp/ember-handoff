@@ -17,9 +17,12 @@ export default Service.extend({
   },
 
   recognize(url) {
-    let handlers = Array.from(this.get('_routing').router.router.recognizer.recognize(url));
+    const href = url.href;
+    const pathname = url.pathname;
+
+    let handlers = Array.from(this.get('_routing').router.router.recognizer.recognize(pathname));
     handlers.shift(); // application handler is always present and not interesting here
-    let routeName = handlers[handlers.length-1].handler;
+    let routeName = handlers[handlers.length - 1].handler;
     let params = [];
     handlers.forEach(h => {
       // It's possible for routes to have more than one parameter, but
@@ -30,7 +33,12 @@ export default Service.extend({
         params.push(h.params[p]);
       }
     });
-    return { routeName, params };
+
+    let qp = this.get('_routing').router.router.recognizer.recognize(href).queryParams;
+    params.push({
+      queryParams: qp
+    });
+    return {routeName, params};
   },
 
   rootURL: alias('_routing.router.rootURL'),
