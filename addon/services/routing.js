@@ -13,7 +13,16 @@ import { alias } from 'ember-computed';
 export default Service.extend({
   _routing: inject('-routing'),
   transitionTo(routeName, ...models) {
-    this.get('_routing').transitionTo(routeName, models);
+    let queryParams = {};
+    if (models && models.length > 0) {
+      var lastArg = models[models.length - 1];
+
+      if (lastArg && lastArg.hasOwnProperty('queryParams')) {
+        queryParams = Array.prototype.pop.call(models).queryParams;
+      }
+    }
+
+    this.get('_routing').transitionTo(routeName, models, queryParams);
   },
 
   recognize(url) {
